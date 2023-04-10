@@ -2,6 +2,12 @@ const AsyncHandler = require('express-async-handler');
 const Goals = require('../models/Goals');
 // get the goals
 const getGoals = AsyncHandler(async (req, res) => {
+    if (req.user.role === 1) {
+        let goal = await Goals.find();
+        res.status(200).json(
+        goal
+    );
+    }
     let goal = await Goals.find({user:req.user.id});
     res.status(200).json(
         goal

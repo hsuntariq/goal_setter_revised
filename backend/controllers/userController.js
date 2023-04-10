@@ -23,10 +23,10 @@ const registerUser =AsyncHandler(async(req,res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     // create the user
     const newUser = User.create({
-        name,email,password:hashedPassword,
+        name,email,role:0,password:hashedPassword,
     })
     res.status(200).json({
-        name, email, password, token: generateToken(newUser._id),
+        name, email, password:hashedPassword,role:newUser.role, token: generateToken(newUser._id),
     })
 })
 
@@ -41,6 +41,7 @@ const loginUser = AsyncHandler(async (req, res) => {
             name:checkUser.name,
             email:checkUser.email,
             password:checkUser.password,
+            role:checkUser.role,
             token: generateToken(checkUser._id)
         })
     } else {
@@ -56,14 +57,24 @@ const generateToken = (id) => {
 }
 
 const getSpecificUser = AsyncHandler(async(req,res) => {
+    const { _id, name, email, role } = req.user;
     res.status(200).json({
-        message:'get user'
+        id: _id,
+        name,
+        email,
+        role,
     })
+})
+
+const getAdmins =AsyncHandler(async(req, res) => {
+    const admins = await User.find({ role: 0 });
+    res.status(200).json({ admins });
 })
 
 
 module.exports = {
     registerUser,
     loginUser,
-    getSpecificUser
+    getSpecificUser,
+    getAdmins,
 }

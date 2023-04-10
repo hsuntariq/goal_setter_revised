@@ -4,8 +4,7 @@ import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom'
 import GoalForm from '../components/GoalForm';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import { getGoals } from '../features/goalSlice';
-import { reset } from 'nodemon';
+import { getGoals, reset } from '../features/goalSlice';
 const Home = () => {
     const { user } = useSelector((state) => state.auth);
     const { goals, isLoading,isSuccess,isError,message } = useSelector((state) => state.goals);

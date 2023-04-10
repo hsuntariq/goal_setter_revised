@@ -14,6 +14,10 @@ const UserModel = mongoose.Schema({
         type: String,
         required:[true,'Please enter a password'],
     },
+    role:{
+        type: Number,
+        default: 0,
+    }
 
 },
     {
