@@ -4,7 +4,7 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken')
 const registerUser =AsyncHandler(async(req,res) => {
     // get user data from the body
-    const { name, email, password } = req.body;
+    const { name, email, password,pic } = req.body;
     // validate that the user enters the field
     if (!name || !email || !password) {
         res.status(400);
@@ -23,10 +23,10 @@ const registerUser =AsyncHandler(async(req,res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     // create the user
     const newUser = User.create({
-        name,email,role:0,password:hashedPassword,
+        name,email,pic,role:0,password:hashedPassword,
     })
     res.status(200).json({
-        name, email, password:hashedPassword,role:newUser.role, token: generateToken(newUser._id),
+        name, email, password:hashedPassword,pic,role:newUser.role, token: generateToken(newUser._id),
     })
 })
 

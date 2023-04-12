@@ -24,7 +24,12 @@ return (
             </Navbar.Brand>
             <Nav className='ms-auto'>
                 {user? <Nav.Link>
-                
+                        <img style={{
+                        width: '50px',
+                        height: '50px',
+                        borderRadius:'50%'
+                        
+                        }} src={user.pic} alt="" />
                         <AiOutlinePoweroff onClick={handleLogout} className="text-danger" style={{fontSize:'2rem'}} />
             </Nav.Link> : (<><Nav.Link>
                 <Link to='/login'>

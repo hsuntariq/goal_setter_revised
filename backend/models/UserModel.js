@@ -17,8 +17,11 @@ const UserModel = mongoose.Schema({
     role:{
         type: Number,
         default: 0,
+    },
+    pic: {
+        type: String,
+        required: [true, 'please enter your image'],
     }
-
 },
     {
         timestamps:true

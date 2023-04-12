@@ -4,11 +4,30 @@ import { reset, register } from '../features/authSlice'
 import {useSelector,useDispatch} from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
+import userImage from '../assets/user.webp'
+import '../css/styles.css'
+import {BsPlusCircleFill} from 'react-icons/bs'
 const Register = () => {
+    // image upload
+    const [image,setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const validateImage = e => {
+        const file = e.target.files[0];
+        if(file > 102484320){
+            alert('file size should be smaller')
+        } else {
+            const img = URL.createObjectURL(file);
+            setImagePreview(img);
+            setImage(file);
+        }
+    }
     const [formFields, setFormFields] = useState({
-    name:'',email:'',password:'',c_password:'',
+    name:'',email:'',password:'',c_password:''
 })
 
+    // validate the image
+    
     // initialize the navigate and useDispatch
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -30,19 +49,35 @@ const Register = () => {
         dispatch(reset());  
     }, [user, isError, isSuccess, message, dispatch, navigate]);
     
+    // upload to cloudinary
+    
+    const uploadImage = async() => {
+        const data = new FormData();
+        data.append('file', image);
+        data.append('upload_preset', 'vgvxg0kj');
+        let res = await fetch('https://api.cloudinary.com/v1_1/djo5zsnlq/image/upload', {
+            method: 'post',
+            body:data,
+        })
+        const urlData = await res.json();
+        return urlData.url;
+    }
+
     // handle the form data
-    const handleSubmit = (e)=>{
+    const handleSubmit = async(e)=>{
         e.preventDefault();
+        // url for image
+        const pic = await uploadImage(image);
         // check for matching passwords
         if (password !== c_password) {
             alert('password do not match');
         } else {
             const userData = {
-                name,email,password
+                name,email,password,pic
             }
             dispatch(register(userData));
         }
-
+        // console.log(url)
     }
     // handle the state values
     const change = (e) => {
@@ -58,6 +93,11 @@ return (
     <>
         <Container className="col-lg-4 m-auto mt-4">
             <Form className="p-3 rounded shadow border">
+                <div className="image-container">
+                    <img width="100%" name="image" src={imagePreview?imagePreview:userImage} alt="" />
+                    <input name='image' type="file" onChange={validateImage} accept="image/png,image/jpg" />
+                    <BsPlusCircleFill className='icon'/>
+                </div>
                 <Form.Label>Name</Form.Label>
                 <Form.Control 
                 type="text"
